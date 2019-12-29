@@ -27,8 +27,8 @@ public class AuthenticationController {
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
-	@RequestMapping(value = "/generate-token", method = RequestMethod.POST)
-	public ResponseEntity<AuthToken> ResponseEntityregister(@RequestBody LoginUser loginUser) throws AuthenticationException {
+	@RequestMapping(value = "/generate", method = RequestMethod.POST)
+	public ResponseEntity<AuthToken> login(@RequestBody LoginUser loginUser) throws AuthenticationException {
 
 		final Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginUser.getUsername(), loginUser.getPassword()));
@@ -38,5 +38,15 @@ public class AuthenticationController {
 		final String token = jwtTokenUtil.generateToken(loginUser.getUsername());
 		
 		return ResponseEntity.ok(new AuthToken(token, loginUser.getUsername()));
+	}
+	
+	@RequestMapping(value = "/revoke", method = RequestMethod.POST)
+	public ResponseEntity<AuthToken> logout(@RequestBody AuthToken token) throws AuthenticationException {
+		
+		if(!jwtTokenUtil.revokeToken(token.getToken(), token.getUsername())) {
+			return ResponseEntity.status(401).body(token);
+		}
+		
+		return ResponseEntity.ok(token);
 	}
 }

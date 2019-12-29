@@ -1,5 +1,7 @@
 package io.ext.medinvention.service.security;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
@@ -32,6 +34,21 @@ public class JwtTokenUtil implements Serializable {
 		return doGenerateToken(username);
 	}
 
+	public Boolean revokeToken(String token, String user) {
+		if (!validateToken(token, user)) {
+			return false;
+		}
+		File file = new File(getTokenFilePath(token));
+		try {
+			if (file.createNewFile()) {
+				return true;
+			}
+		} catch (IOException e) {
+			// ignore
+		}
+		return false;
+	}
+
 	public Boolean validateToken(String token, String user) {
 		final String username = getUsernameFromToken(token);
 		return (username.equals(user) && !isTokenExpired(token));
@@ -41,7 +58,7 @@ public class JwtTokenUtil implements Serializable {
 		Claims claims = Jwts.claims().setSubject(subject);
 		claims.put("scopes", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
 
-		return Jwts.builder().setClaims(claims).setIssuer("https://devglan.com")
+		return Jwts.builder().setClaims(claims).setIssuer("https://medinvention.ext.io")
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_SECONDS * 1000))
 				.signWith(SignatureAlgorithm.HS256, SIGNING_KEY).compact();
@@ -53,6 +70,14 @@ public class JwtTokenUtil implements Serializable {
 
 	private Boolean isTokenExpired(String token) {
 		final Date expiration = getExpirationDateFromToken(token);
-		return expiration.before(new Date());
+		return expiration.before(new Date()) || (new File(getTokenFilePath(token))).exists();
+	}
+
+	private String getTokenFilePath(String token) {
+		String tempDir = System.getProperty("java.io.tmpdir");
+		if (!tempDir.endsWith("/") && !tempDir.endsWith("\\")) {
+			tempDir = tempDir + "/";
+		}
+		return tempDir + token;
 	}
 }
