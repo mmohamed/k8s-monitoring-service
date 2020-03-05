@@ -58,7 +58,7 @@ public class JwtTokenUtil implements Serializable {
 		Claims claims = Jwts.claims().setSubject(subject);
 		claims.put("scopes", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
 
-		return Jwts.builder().setClaims(claims).setIssuer("https://medinvention.ext.io")
+		return Jwts.builder().setClaims(claims).setIssuer("https://api.medinvention.dev")
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_SECONDS * 1000))
 				.signWith(SignatureAlgorithm.HS256, SIGNING_KEY).compact();
