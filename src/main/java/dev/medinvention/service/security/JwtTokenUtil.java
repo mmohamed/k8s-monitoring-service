@@ -1,4 +1,4 @@
-package io.ext.medinvention.service.security;
+package dev.medinvention.service.security;
 
 import java.io.File;
 import java.io.IOException;

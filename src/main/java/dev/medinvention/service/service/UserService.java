@@ -1,4 +1,4 @@
-package io.ext.medinvention.service.service;
+package dev.medinvention.service.service;
 
 import java.util.Arrays;
 import java.util.List;

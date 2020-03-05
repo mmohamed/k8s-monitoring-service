@@ -1,4 +1,4 @@
-package io.ext.medinvention.service.security;
+package dev.medinvention.service.security;
 
 import javax.annotation.Resource;
 

@@ -1,4 +1,4 @@
-package io.ext.medinvention.service.controller;
+package dev.medinvention.service.controller;
 
 import javax.naming.AuthenticationException;
 
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.ext.medinvention.service.model.AuthToken;
-import io.ext.medinvention.service.model.LoginUser;
-import io.ext.medinvention.service.security.JwtTokenUtil;
+import dev.medinvention.service.model.AuthToken;
+import dev.medinvention.service.model.LoginUser;
+import dev.medinvention.service.security.JwtTokenUtil;
 
 @RestController
 @RequestMapping("/token")

@@ -1,4 +1,4 @@
-package io.ext.medinvention.service.model;
+package dev.medinvention.service.model;
 
 public class State {
 

@@ -1,11 +1,11 @@
-package io.ext.medinvention.service.controller;
+package dev.medinvention.service.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.ext.medinvention.core.Collector;
-import io.ext.medinvention.service.model.State;
+import dev.medinvention.core.Collector;
+import dev.medinvention.service.model.State;
 
 @RestController
 @RequestMapping("/state")
