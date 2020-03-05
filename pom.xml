@@ -6,7 +6,6 @@
 		<groupId>dev.medinvention</groupId>
 		<artifactId>k8s-monitoring</artifactId>
 		<version>0.0.1</version>
-		<relativePath/>
 	</parent>
 	<artifactId>service</artifactId>
 
@@ -53,7 +52,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>dev.medinvention</groupId>
 			<artifactId>core</artifactId>
