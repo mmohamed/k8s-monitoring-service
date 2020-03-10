@@ -23,7 +23,7 @@ public class UserService implements UserDetailsService {
 		if(!username.contentEquals("medinvention")){
 			throw new UsernameNotFoundException("Invalid username or password.");
 		}
-		return new User(username, bcryptEncoder.encode("yesyes") , getAuthority());
+		return new User(username, bcryptEncoder.encode("medinvention") , getAuthority());
 	}
 
 	private List<SimpleGrantedAuthority> getAuthority() {
