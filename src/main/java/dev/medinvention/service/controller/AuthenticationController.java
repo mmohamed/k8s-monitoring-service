@@ -40,6 +40,16 @@ public class AuthenticationController {
 		return ResponseEntity.ok(new AuthToken(token, loginUser.getUsername()));
 	}
 	
+	@RequestMapping(value = "/validate", method = RequestMethod.POST)
+	public ResponseEntity<AuthToken> validate(@RequestBody AuthToken token) throws AuthenticationException {
+		
+		if(!jwtTokenUtil.validateToken(token.getToken(), token.getUsername())) {
+			return ResponseEntity.status(401).body(token);
+		}
+		
+		return ResponseEntity.ok(token);
+	}
+	
 	@RequestMapping(value = "/revoke", method = RequestMethod.POST)
 	public ResponseEntity<AuthToken> logout(@RequestBody AuthToken token) throws AuthenticationException {
 		
