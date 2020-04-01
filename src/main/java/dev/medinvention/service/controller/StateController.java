@@ -15,6 +15,7 @@ import dev.medinvention.core.service.ClusterService;
 import dev.medinvention.core.service.NodeService;
 import dev.medinvention.core.service.PodService;
 import dev.medinvention.core.service.StateService;
+import dev.medinvention.service.Application;
 import dev.medinvention.service.model.NodeMetrics;
 import io.kubernetes.client.openapi.ApiException;
 
@@ -58,13 +59,14 @@ public class StateController {
 					break;
 				}
 			}
+			String ramMetricName = nodeMetrics.getName() + ".cputemperature";
+			nodeMetrics.setCpuTemperature(0F);
+			if(Application.ramMetrics.containsKey(ramMetricName)) {
+				nodeMetrics.setCpuTemperature(Application.ramMetrics.get(ramMetricName)/1000F);
+			}
+			
 			response.add(nodeMetrics);
 		}
 		return response;
-	}
-
-	@GetMapping("/metrics")
-	public List<Metrics> metrics() throws ApiException {
-		return this.clusterService.metrics();
 	}
 }

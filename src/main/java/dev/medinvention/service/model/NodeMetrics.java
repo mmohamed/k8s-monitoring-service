@@ -6,7 +6,8 @@ import dev.medinvention.core.model.Node;
 public class NodeMetrics extends Node {
 
 	private Metrics metrics;
-
+	private Float cpuTemperature;
+	
 	public static NodeMetrics fromNode(Node node) {
 		NodeMetrics builded = new NodeMetrics();
 		
@@ -27,5 +28,13 @@ public class NodeMetrics extends Node {
 
 	public void setMetrics(Metrics metrics) {
 		this.metrics = metrics;
+	}
+
+	public Float getCpuTemperature() {
+		return cpuTemperature;
+	}
+
+	public void setCpuTemperature(Float cpuTemperature) {
+		this.cpuTemperature = cpuTemperature;
 	}
 }
