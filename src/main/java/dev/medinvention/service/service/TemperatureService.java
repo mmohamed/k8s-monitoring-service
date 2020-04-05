@@ -102,7 +102,7 @@ public class TemperatureService {
 	private float getMaxNodeTemperature() {
 		float max = 0F;
 		for (String key : Application.ramMetrics.keySet()) {
-			if (key.endsWith(".cputemperature")) {
+			if (key.endsWith(".cputemperature") && !key.startsWith("master.")) {
 				max = Math.max(max, Application.ramMetrics.get(key) / 1000F);
 			}
 		}
