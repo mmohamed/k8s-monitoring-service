@@ -3,6 +3,7 @@ package dev.medinvention.service.security;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,9 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+	@Value("${security.token}")
+	private String collectorToken;
 
 	@Resource(name = "userService")
 	private UserDetailsService userDetailsService;
@@ -49,9 +53,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		http.cors().and().csrf().disable().authorizeRequests().antMatchers("/token/**").permitAll().anyRequest()
-				.authenticated().and().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.cors().and().csrf().disable().authorizeRequests().antMatchers("/token/**").permitAll()
+				.antMatchers("/actuator/**").permitAll().antMatchers("/collect/" + collectorToken + "/**").permitAll()
+				.anyRequest().authenticated().and().exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 	}

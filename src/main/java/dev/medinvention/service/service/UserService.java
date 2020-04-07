@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class UserService implements UserDetailsService {
 
@@ -23,7 +22,7 @@ public class UserService implements UserDetailsService {
 		if(!username.contentEquals("medinvention")){
 			throw new UsernameNotFoundException("Invalid username or password.");
 		}
-		return new User(username, bcryptEncoder.encode("yesyes") , getAuthority());
+		return new User(username, bcryptEncoder.encode("medinvention") , getAuthority());
 	}
 
 	private List<SimpleGrantedAuthority> getAuthority() {
