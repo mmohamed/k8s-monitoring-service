@@ -1,12 +1,18 @@
 package dev.medinvention.service.service;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import dev.medinvention.service.Application;
 import dev.medinvention.service.model.FanStatus;
+import dev.medinvention.service.model.NodeMetrics;
 import dev.medinvention.service.model.Response;
+import dev.medinvention.service.model.StateRequest;
 
 @Service
 public class TemperatureService {
@@ -74,8 +80,25 @@ public class TemperatureService {
 			return FanStatus.disabled();
 		}
 
-		Response response = restTemplate.getForObject(fanServerURL + "/fan/status", Response.class);
-		
+		HashMap<String, Float> temperatures = new HashMap<String, Float>();
+
+		for (String key : Application.ramMetrics.keySet()) {
+			if (key.endsWith(".cputemperature")) {
+				String node = key.replace(".cputemperature", "");
+				temperatures.put(node, this.get(node));
+			}
+		}
+
+		StateRequest stateRequest = new StateRequest();
+		stateRequest.setTemperatures(temperatures);
+		stateRequest.setAutoMode(this.isAutoEnabled());
+		stateRequest.setMaxTemperature(this.isAutoEnabled() ? Float.valueOf(this.fanAutoStart) : null);
+		stateRequest.setMinTemperature(this.isAutoEnabled() ? Float.valueOf(this.fanAutoStart) * 0.9F : null);
+
+		HttpEntity<StateRequest> request = new HttpEntity<StateRequest>(stateRequest);
+
+		Response response = restTemplate.postForObject(fanServerURL + "/fan/status", request, Response.class);
+
 		return FanStatus.fromOnResponse(response, this.isAutoEnabled(),
 				this.isAutoEnabled() ? Float.valueOf(this.fanAutoStart) : null,
 				this.isAutoEnabled() ? Float.valueOf(this.fanAutoStart) * 0.9F : null);
