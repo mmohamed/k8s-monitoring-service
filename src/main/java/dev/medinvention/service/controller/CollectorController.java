@@ -17,6 +17,7 @@ public class CollectorController {
 
 	@GetMapping("/temperature")
 	public Integer setTemperature(@RequestParam String node, @RequestParam Integer value) {
-		return temperatureService.collect(node, value);
+		temperatureService.collect(node, value);
+		return (int) (temperatureService.get(node) * 1000);
 	}
 }
