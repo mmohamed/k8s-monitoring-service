@@ -136,11 +136,13 @@ public class TemperatureService {
             boolean isRunning = this.status().getIsRunning();
 
             // update historic data
-            Application.historicData.put(System.currentTimeMillis() / 1000, maxNodes);
-            while (Application.historicData.size() > 3) {
-                Application.historicData.pollFirstEntry();
+            if(0 == Application.historicData.size() || System.currentTimeMillis()-1000 > Application.historicData.lastKey()) {
+            	Application.historicData.put(System.currentTimeMillis() / 1000, maxNodes);
+                while (Application.historicData.size() > 3) {
+                    Application.historicData.pollFirstEntry();
+                }
             }
-
+            
             // calculate range
             float maxTemperature = Float.parseFloat(this.fanAutoStart);
             float minTemperature = maxTemperature * 0.9F;
@@ -153,7 +155,7 @@ public class TemperatureService {
 
                 Float dt = (n.getValue() - n1.getValue()) / (n.getKey() - n1.getKey())
                         + (n1.getValue() - n2.getValue()) / (n1.getKey() - n2.getKey());                
-                if (dt / 2 > 0) {
+                if (dt > 0) {
                     this.off();
                     Application.historicData.clear();
                     return TemperatureService.FAN_STOPPED_FOR_RESTARTING;
