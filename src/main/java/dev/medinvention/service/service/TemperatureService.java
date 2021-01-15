@@ -54,7 +54,7 @@ public class TemperatureService {
             return FanStatus.disabled();
         }
 
-        Response response = restTemplate.getForObject(fanServerURL + "/fan/start", Response.class);
+        Response response = this.getRestTemplate().getForObject(fanServerURL + "/fan/start", Response.class);
 
         return FanStatus.fromOnResponse(response, this.isAutoEnabled(),
                 this.isAutoEnabled() ? Float.valueOf(this.fanAutoStart) : null,
@@ -66,7 +66,7 @@ public class TemperatureService {
             return FanStatus.disabled();
         }
 
-        Response response = restTemplate.getForObject(fanServerURL + "/fan/stop", Response.class);
+        Response response = this.getRestTemplate().getForObject(fanServerURL + "/fan/stop", Response.class);
 
         return FanStatus.fromOffResponse(response, this.isAutoEnabled(),
                 this.isAutoEnabled() ? Float.valueOf(this.fanAutoStart) : null,
@@ -95,7 +95,7 @@ public class TemperatureService {
 
         HttpEntity<StateRequest> request = new HttpEntity<StateRequest>(stateRequest);
 
-        Response response = restTemplate.postForObject(fanServerURL + "/fan/status", request, Response.class);
+        Response response = this.getRestTemplate().postForObject(fanServerURL + "/fan/status", request, Response.class);
         
         return FanStatus.fromOnResponse(response, this.isAutoEnabled(),
                 this.isAutoEnabled() ? Float.valueOf(this.fanAutoStart) : null,
