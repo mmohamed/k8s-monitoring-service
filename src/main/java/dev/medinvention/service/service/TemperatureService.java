@@ -12,6 +12,8 @@ import dev.medinvention.service.Application;
 import dev.medinvention.service.model.FanStatus;
 import dev.medinvention.service.model.Response;
 import dev.medinvention.service.model.StateRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class TemperatureService {
@@ -27,7 +29,9 @@ public class TemperatureService {
     private String fanAutoStart;
 
     private RestTemplate restTemplate;
-
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(TemperatureService.class);
+    
     public void collect(String node, Integer value) {        
         this.push(node, value);
         this.autoCheck();
@@ -154,7 +158,10 @@ public class TemperatureService {
                 Entry<Long, Float> n2 = Application.historicData.lowerEntry(n1.getKey()); // n-2
 
                 Float dt = (n.getValue() - n1.getValue()) / (n.getKey() - n1.getKey())
-                        + (n1.getValue() - n2.getValue()) / (n1.getKey() - n2.getKey());                
+                        + (n1.getValue() - n2.getValue()) / (n1.getKey() - n2.getKey());   
+                
+                LOGGER.info("Calculated dt : " + dt);
+                
                 if (dt > 0) {
                     this.off();
                     Application.historicData.clear();
